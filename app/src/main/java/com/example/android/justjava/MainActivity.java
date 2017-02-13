@@ -3,6 +3,7 @@ package com.example.android.justjava;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 /**
@@ -10,11 +11,13 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity {
     int quantity = 0;
+    CheckBox hasWhippedCream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        hasWhippedCream = (CheckBox) findViewById(R.id.whippedCream);
     }
 
     /**
@@ -35,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
      */
     public int calculateorder_summary() {
         int order_summary = quantity * 5;
+        if (hasWhippedCream.isChecked()) {
+            order_summary = quantity * 6;
+        }
+
         return order_summary;
     }
 
