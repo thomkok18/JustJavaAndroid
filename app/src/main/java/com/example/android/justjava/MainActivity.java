@@ -1,9 +1,12 @@
 package com.example.android.justjava;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -11,13 +14,16 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity {
     int quantity = 0;
-    CheckBox hasWhippedCream;
+    CheckBox hasWhippedCream, hasChocolate;
+    EditText name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hasWhippedCream = (CheckBox) findViewById(R.id.whippedCream);
+        hasChocolate = (CheckBox) findViewById(R.id.chocolate);
+        name = (EditText) findViewById(R.id.nameText);
     }
 
     /**
@@ -25,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
      */
     public String createOrderSummary() {
         int order_summary = calculateorder_summary();
-        String name = "Kaptain Kunal", quantityText = "Quantity: " + quantity;
-        String order_summaryMessage = name + "\n" + quantityText + "\n" + "Total: $" + order_summary;
+        String quantityText = getString(R.string.quantityText) + quantity;
+        String order_summaryMessage = getString(R.string.order_summary_name) + name.getText() + "\n" + quantityText + "\n" + getString(R.string.totalPrice) + order_summary;
         if (order_summary != 0) {
-            order_summaryMessage = order_summaryMessage + "\nThank you!";
+            order_summaryMessage = order_summaryMessage + "\n" + getString(R.string.thank_you);
         }
         return order_summaryMessage;
     }
@@ -37,11 +43,14 @@ public class MainActivity extends AppCompatActivity {
      * This method is called for calculating the order_summary.
      */
     public int calculateorder_summary() {
-        int order_summary = quantity * 5;
+        int order_summary, whippedCream = 0, chocolate = 0;
         if (hasWhippedCream.isChecked()) {
-            order_summary = quantity * 6;
+            whippedCream = quantity;
         }
-
+        if (hasChocolate.isChecked()) {
+            chocolate = quantity * 2;
+        }
+        order_summary = (quantity * 5) + whippedCream + chocolate;
         return order_summary;
     }
 
@@ -49,13 +58,22 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        displayMessage(createOrderSummary());
+        String personName = name.getText().toString();
+        if (!personName.matches("") && quantity != 0)  {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject) + name.getText());
+            intent.putExtra(Intent.EXTRA_TEXT, createOrderSummary());
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        }
     }
 
     public void increment(View view) {
         quantity++;
-        if (quantity < 0) {
-            quantity = 0;
+        if (quantity > 100) {
+            quantity = 100;
         }
         displayQuantity(quantity);
     }
@@ -74,13 +92,5 @@ public class MainActivity extends AppCompatActivity {
     private void displayQuantity(int numberOfCoffees) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + numberOfCoffees);
-    }
-
-    /**
-     * This method displays the given text on the screen.
-     */
-    private void displayMessage(String message) {
-        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(message);
     }
 }

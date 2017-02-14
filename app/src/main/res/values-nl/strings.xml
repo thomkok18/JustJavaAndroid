@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JustJava</string>
+    <string name="chocolate">Chocola</string>
+    <string name="order">Bestellen</string>
+    <string name="order_summary_name">"Naam: "</string>
+    <string name="quantity">Aantal</string>
+    <string name="quantityText">"Aantal: "</string>
+    <string name="subject">"Just java bestelling voor "</string>
+    <string name="thank_you">Dankjewel!</string>
+    <string name="toppings">Toppings</string>
+    <string name="totalPrice">Totaal: $</string>
+    <string name="whippedCream">Slagroom</string>
+    <string name="name">Naam</string>
+</resources>
